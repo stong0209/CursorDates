@@ -16,7 +16,7 @@ export async function extractVideoDateTaken(filePath: string): Promise<Date | un
 			candidates.push(tags.creation_time);
 			for (const s of streams) {
 				if (s?.tags?.creation_time) candidates.push(s.tags.creation_time);
-				if (s?.tags?.com.apple.quicktime.creationdate) candidates.push(s.tags['com.apple.quicktime.creationdate']);
+				if (s?.tags?.com?.apple?.quicktime?.creationdate) candidates.push(s.tags['com.apple.quicktime.creationdate']);
 			}
 
 			for (const v of candidates) {
