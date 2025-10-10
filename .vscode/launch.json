@@ -12,7 +12,8 @@
             "program": "${workspaceFolder}/node_modules/tsx/dist/cli.mjs",
             "args": [
                 "${workspaceFolder}/src/index.ts",
-                "C:\\dev\\2009"
+                "C:\\dev\\2009",
+                "C:\\dev\\2009-log.txt"
             ],
             "cwd": "${workspaceFolder}",
             "skipFiles": [
@@ -34,7 +35,8 @@
                 "${workspaceFolder}/dist/**/*.js"
             ],
             "args": [
-                "C:\\dev\\2009"
+                "C:\\dev\\2009",
+                "C:\\dev\\2009-log.txt"
             ]
         }
     ]
