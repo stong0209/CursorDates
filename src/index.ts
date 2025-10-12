@@ -2,6 +2,7 @@ import fg from 'fast-glob';
 import path from 'node:path';
 import fs from 'node:fs/promises';
 import dayjs from 'dayjs';
+import { utimes } from 'utimes';
 import { extractImageDateTaken } from './metadata/image.js';
 import { extractVideoDateTaken } from './metadata/video.js';
 
@@ -75,7 +76,11 @@ async function main() {
 
 				// Update created and modified to date taken
 				try {
-					await fs.utimes(file, taken!, taken!);
+					await utimes(file, {
+						btime: taken!,
+						mtime: taken!,
+						atime: taken!
+					});
 				} catch (utimesErr) {
 					const errorMsg = `Phase1 ERROR: Failed to update timestamps for ${file}: ${(utimesErr as Error).message}`;
 					console.error(errorMsg);
@@ -98,7 +103,11 @@ async function main() {
 
 				// Update created to modified time
 				try {
-					await fs.utimes(file, modified, modified);
+					await utimes(file, {
+						btime: modified,
+						mtime: modified,
+						atime: modified
+					});
 				} catch (utimesErr) {
 					const errorMsg = `Phase2 ERROR: Failed to update timestamps for ${file}: ${(utimesErr as Error).message}`;
 					console.error(errorMsg);
