@@ -55,8 +55,11 @@ async function main() {
 			const modified = stats.mtime;
 			const taken = await getDateTaken(file);
 
+			// const hasDiscrepancy = taken
+			// 	? (taken.getTime() !== created.getTime() || taken.getTime() !== modified.getTime())
+			// 	: false;
 			const hasDiscrepancy = taken
-				? (taken.getTime() !== created.getTime() || taken.getTime() !== modified.getTime())
+				? (taken.getTime() !== modified.getTime())
 				: false;
 
 			if (hasDiscrepancy) {
@@ -64,7 +67,7 @@ async function main() {
 				const line = [
 					file,
 					`DateTaken: ${formatDate(taken)}`,
-					`Created: ${formatDate(created)}`,
+					//`Created: ${formatDate(created)}`,
 					`Modified: ${formatDate(modified)}`,
 				].join(' | ');
 				const logLine = `Phase1 : ${line}`;
@@ -73,7 +76,7 @@ async function main() {
 					await fs.appendFile(logFile, logLine + '\n', 'utf8');
 				}
 
-				// Update created and modified to date taken
+				// Update access and modified to date taken
 				try {
 					await fs.utimes(file, taken!, taken!);
 				} catch (utimesErr) {
@@ -83,30 +86,31 @@ async function main() {
 						await fs.appendFile(logFile, errorMsg + '\n', 'utf8');
 					}
 				}
-			} else if (!taken && created && modified) {
-				// Phase2:
-				const line = [
-					file,
-					`Created: ${formatDate(created)}`,
-					`Modified: ${formatDate(modified)}`,
-				].join(' | ');
-				const logLine = `Phase2 : ${line}`;
-				console.log(logLine);
-				if (logFile) {
-					await fs.appendFile(logFile, logLine + '\n', 'utf8');
-				}
-
-				// Update created to modified time
-				try {
-					await fs.utimes(file, modified, modified);
-				} catch (utimesErr) {
-					const errorMsg = `Phase2 ERROR: Failed to update timestamps for ${file}: ${(utimesErr as Error).message}`;
-					console.error(errorMsg);
-					if (logFile) {
-						await fs.appendFile(logFile, errorMsg + '\n', 'utf8');
-					}
-				}
 			}
+			// else if (!taken && created && modified) {
+			// 	// Phase2:
+			// 	const line = [
+			// 		file,
+			// 		`Created: ${formatDate(created)}`,
+			// 		`Modified: ${formatDate(modified)}`,
+			// 	].join(' | ');
+			// 	const logLine = `Phase2 : ${line}`;
+			// 	console.log(logLine);
+			// 	if (logFile) {
+			// 		await fs.appendFile(logFile, logLine + '\n', 'utf8');
+			// 	}
+
+			// 	// Update created to modified time
+			// 	try {
+			// 		await fs.utimes(file, modified, modified);
+			// 	} catch (utimesErr) {
+			// 		const errorMsg = `Phase2 ERROR: Failed to update timestamps for ${file}: ${(utimesErr as Error).message}`;
+			// 		console.error(errorMsg);
+			// 		if (logFile) {
+			// 			await fs.appendFile(logFile, errorMsg + '\n', 'utf8');
+			// 		}
+			// 	}
+			// }
 		} catch (err) {
 			const errorMsg = `Error processing ${file}: ${(err as Error).message}`;
 			console.error(errorMsg);
