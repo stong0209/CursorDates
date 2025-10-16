@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsx src/index.ts",
     "build": "tsc -p tsconfig.json",
-    "start": "node dist/index.js",
+    "start": "node dist/index.js \"C:\\dev\\2009\" \"C:\\dev\\2009-Output2.txt\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
